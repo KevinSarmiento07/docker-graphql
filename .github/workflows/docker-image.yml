@@ -37,15 +37,19 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
         echo "Fin del Login"
 
-    # - name: Build Docker Image
-    #   run: |
-    #     docker build -t ksarmiento007/docker-graphql:0.0.2 .
-    #     docker build -t ksarmiento007/docker-graphql:latest .
+    - name: Build Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker build -t ksarmiento007/docker-graphql:$NEW_VERSION .
+        docker build -t ksarmiento007/docker-graphql:latest .
 
-    # - name: Push Docker Image
-    #   run: |
-    #     docker push ksarmiento007/docker-graphql:0.0.2
-    #     docker push ksarmiento007/docker-graphql:latest
+    - name: Push Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker push ksarmiento007/docker-graphql:$NEW_VERSION
+        docker push ksarmiento007/docker-graphql:latest
         
-    # - name: Build the Docker image
-    #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
